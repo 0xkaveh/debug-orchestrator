@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "reproduction": {
+    "command": ["python", "tests/fixtures/passing_check.py"],
+    "failed_before": true,
+    "failure_signature": "expected 1, observed 0"
+  },
+  "hypotheses": [
+    {
+      "id": "H1",
+      "status": "supported",
+      "evidence": ["The fixture trace entered the incorrect branch."]
+    }
+  ],
+  "root_cause": {
+    "statement": "A false branch skipped the required update.",
+    "evidence": [
+      "The trace entered the false branch with the fixture input.",
+      "Forcing the expected branch produced the expected fixture state."
+    ]
+  },
+  "fix": {
+    "summary": "Correct the branch condition.",
+    "files": ["tests/fixtures/passing_check.py"]
+  },
+  "regression": {
+    "command": ["python", "tests/fixtures/passing_check.py"],
+    "failed_before": true
+  },
+  "checks": [
+    {
+      "name": "fixture check",
+      "command": ["python", "tests/fixtures/passing_check.py"]
+    }
+  ],
+  "instrumentation": {
+    "added": false,
+    "removed": true
+  },
+  "residual_risks": []
+}

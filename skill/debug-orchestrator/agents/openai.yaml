@@ -1,0 +1,4 @@
+interface:
+  display_name: "Debug Orchestrator"
+  short_description: "Evidence-led, security-first debugging"
+  default_prompt: "Use $debug-orchestrator to reproduce, diagnose, fix, and verify this bug with evidence."

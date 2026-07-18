@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "reproduction": {
+    "command": ["python", "-m", "unittest"],
+    "failed_before": true,
+    "failure_signature": "A stable, redacted failure signature"
+  },
+  "hypotheses": [
+    {
+      "id": "H1",
+      "status": "supported",
+      "evidence": ["The decisive observation"]
+    }
+  ],
+  "root_cause": {
+    "statement": "Input or state caused the responsible code path to produce the symptom.",
+    "evidence": [
+      "Evidence connecting the input or state to the responsible code path",
+      "Evidence connecting that code path to the observed symptom"
+    ]
+  },
+  "fix": {
+    "summary": "The minimal mechanism-level change",
+    "files": ["relative/path/to/file"]
+  },
+  "regression": {
+    "command": ["python", "-m", "unittest"],
+    "failed_before": true
+  },
+  "checks": [
+    {
+      "name": "relevant suite",
+      "command": ["python", "-m", "unittest"]
+    }
+  ],
+  "instrumentation": {
+    "added": false,
+    "removed": true
+  },
+  "residual_risks": []
+}

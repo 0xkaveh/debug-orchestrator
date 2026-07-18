@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "symptom": "Describe the observed and expected behavior.",
+  "reproduction": {
+    "command": ["python", "-m", "unittest"],
+    "exit_code_before": 1,
+    "failure_signature": "A stable, redacted failure signature"
+  },
+  "hypotheses": [
+    {
+      "id": "H1",
+      "mechanism": "A falsifiable causal mechanism",
+      "predicts": ["An observable result"],
+      "supporting_evidence": [],
+      "contradicting_evidence": [],
+      "experiment": "One cheapest discriminating experiment",
+      "result": "",
+      "status": "active"
+    }
+  ]
+}

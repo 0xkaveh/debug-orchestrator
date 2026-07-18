@@ -1,0 +1,33 @@
+name: Feature proposal
+description: Propose a focused capability or optional adapter
+title: "[Proposal]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Debugging problem
+      description: What failure mode is not handled well today?
+    validations:
+      required: true
+  - type: textarea
+    id: approach
+    attributes:
+      label: Proposed approach
+      description: Explain the smallest capability that addresses the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: security
+    attributes:
+      label: Security and privacy impact
+      description: Identify new commands, permissions, data, dependencies, ports, or network access.
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification plan
+      description: How will the behavior and security boundary be tested?
+    validations:
+      required: true
