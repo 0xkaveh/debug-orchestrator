@@ -29,6 +29,7 @@ python skill/debug-orchestrator/scripts/run_tests.py --root . -- python -m unitt
 - Keep the change focused and explain the failure mode or capability gap.
 - Add a regression or security test for behavior changes.
 - Preserve path confinement, bounded reads/output, secret minimization, timeouts, and `shell=False` execution.
+- Add Windows-specific tests for any change involving `.cmd`, `.bat`, package managers, or argument handling.
 - Document any new permissions, executable, environment inheritance, network access, or persistent artifact.
 - Use synthetic fixtures only.
 - Update the skill or its progressively loaded reference, not both, when one source of truth is enough.

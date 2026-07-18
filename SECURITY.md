@@ -23,6 +23,8 @@ Do not include real credentials, personal data, production logs, or customer cod
 
 The project’s Python helpers reduce accidental secret exposure and unsafe command composition. They do not isolate executed project code from the host operating system or network. Use a disposable container, VM, or restricted CI runner for untrusted repositories and pull requests.
 
+On Windows, `.cmd` and `.bat` launch paths may involve `cmd.exe` even when Python is called with `shell=False`. The command policy rejects command-shell metacharacters in arguments whenever the resolved executable is a batch file. Native executables continue to receive literal argument arrays.
+
 Out of scope as standalone reports:
 
 - denial of service that requires intentionally overriding documented size or timeout limits;
@@ -34,7 +36,9 @@ These may still be accepted when they reveal a defect in our boundary claims or 
 ## Maintainer release checklist
 
 - Run the complete test suite on supported Python versions.
+- Require a successful CodeQL analysis with no unresolved high or critical alerts.
 - Review changes to command policy, path handling, redaction, CI permissions, and network behavior.
 - Confirm no secrets, raw logs, dumps, browser profiles, or `.debug-orchestrator/` evidence are committed.
 - Pin GitHub Actions to reviewed commit SHAs.
+- Sign release tags and verify the signature before publishing the release.
 - Update the threat model when a new executable, network listener, or external integration is introduced.

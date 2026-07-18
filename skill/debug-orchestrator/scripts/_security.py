@@ -23,6 +23,8 @@ _SENSITIVE_ENV_FRAGMENT = re.compile(
     re.IGNORECASE,
 )
 
+_WINDOWS_BATCH_METACHARACTERS = frozenset('&|<>()^%!"\r\n')
+
 _PRIVATE_KEY = re.compile(
     r"-----BEGIN(?: [A-Z0-9]+)? PRIVATE KEY-----.*?-----END(?: [A-Z0-9]+)? PRIVATE KEY-----",
     re.DOTALL,
@@ -216,6 +218,19 @@ def _normalized_executable_name(value: str) -> str:
     return name
 
 
+def _validate_windows_batch_arguments(arguments: Sequence[str]) -> None:
+    """Reject characters that cmd.exe can reinterpret for .cmd/.bat launch paths."""
+
+    for argument in arguments:
+        unsafe = sorted(set(argument) & _WINDOWS_BATCH_METACHARACTERS)
+        if unsafe:
+            rendered = " ".join(repr(character) for character in unsafe)
+            raise SafetyError(
+                "Windows batch-file arguments contain blocked command-shell "
+                f"metacharacters: {rendered}"
+            )
+
+
 def _require_subcommand(argv: Sequence[str], allowed: set[str], tool: str) -> None:
     if len(argv) < 2:
         raise SafetyError(f"{tool} requires an explicit safe subcommand")
@@ -325,6 +340,9 @@ def validate_command(argv: Sequence[str], policy: PathPolicy) -> list[str]:
                     f"Refusing repository-shadowed executable on PATH: {tool}"
                 )
         executable = located
+
+    if os.name == "nt" and Path(executable).suffix.lower() in {".bat", ".cmd"}:
+        _validate_windows_batch_arguments(argv[1:])
 
     return [executable, *argv[1:]]
 

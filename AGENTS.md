@@ -10,3 +10,4 @@ These instructions apply to the entire repository.
 - Keep adapters optional and one reference level below `SKILL.md`.
 - Never commit `.debug-orchestrator/`, raw logs, dumps, credentials, browser profiles, or generated evidence.
 - Run `python -m unittest discover -s tests -v` and `python -m compileall -q skill tests` before completion.
+- Keep CodeQL enabled with SHA-pinned actions and resolve security alerts before release.

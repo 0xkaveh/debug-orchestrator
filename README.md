@@ -4,7 +4,7 @@ An evidence-led, security-first debugging skill for coding agents.
 
 Debug Orchestrator makes an agent prove what failed, localize the causal mechanism, apply the smallest fix, add a regression guard, and verify the result with fresh output. It routes to browser, runtime, or CI tooling only when the current hypothesis requires it.
 
-> Status: early alpha. Use it on local or disposable environments before trusting it with sensitive systems.
+> Status: security-hardened alpha (`v0.1.0`). Use it on local or disposable environments before trusting it with sensitive systems.
 
 ## Why this exists
 
@@ -48,9 +48,17 @@ The helpers use Python’s standard library and default to:
 
 These controls are not a sandbox. Tests and project scripts are executable code. Review unfamiliar code and use a disposable container or VM before running it. See [SECURITY.md](SECURITY.md) and the skill’s [security policy](skill/debug-orchestrator/references/security-policy.md).
 
+CI runs the test suite on Python 3.10–3.13 and performs CodeQL analysis with the extended security query suite. GitHub Actions are pinned to reviewed commit SHAs. Release tags are signed; verify a release before installing it instead of trusting a moving branch.
+
 ## Install for Codex
 
-Clone the repository, then copy the skill directory into your Codex skills directory.
+Clone the repository, check out a verified release tag, then copy the skill directory into your Codex skills directory.
+
+```bash
+git clone https://github.com/0xkaveh/debug-orchestrator.git
+cd debug-orchestrator
+git checkout v0.1.0
+```
 
 PowerShell:
 
@@ -65,6 +73,14 @@ cp -R ./skill/debug-orchestrator "${CODEX_HOME:-$HOME/.codex}/skills/debug-orche
 ```
 
 Restart or open a new Codex task after installation so the skill is discovered.
+
+GitHub displays the signature status for the release tag. Local SSH signature verification requires the allowed-signers file distributed in `.github/signing-keys`:
+
+```bash
+git config --local gpg.format ssh
+git config --local gpg.ssh.allowedSignersFile .github/signing-keys
+git tag -v v0.1.0
+```
 
 ## Use
 

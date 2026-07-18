@@ -19,6 +19,7 @@ from _security import (  # noqa: E402
     run_bounded_command,
     safe_environment,
     validate_command,
+    _validate_windows_batch_arguments,
 )
 
 
@@ -91,6 +92,38 @@ class CommandPolicyTests(unittest.TestCase):
     def test_blocks_inline_python(self) -> None:
         with self.assertRaises(SafetyError):
             validate_command(["python", "-c", "print('unsafe')"], self.policy)
+
+    def test_blocks_windows_batch_shell_metacharacters(self) -> None:
+        for character in '&|<>()^%!"\r\n':
+            with self.subTest(character=repr(character)):
+                with self.assertRaises(SafetyError):
+                    _validate_windows_batch_arguments([f"test{character}injected"])
+
+    def test_allows_ordinary_windows_batch_arguments(self) -> None:
+        _validate_windows_batch_arguments(
+            ["test", "--", "tests/unit.test.js", "--reporter=dot"]
+        )
+
+    @unittest.skipUnless(os.name == "nt", "Windows batch integration test")
+    def test_batch_arguments_cannot_create_injection_marker(self) -> None:
+        batch_root = REPOSITORY_ROOT / "tests" / "fixtures" / "windows-batch" / "root"
+        batch_bin = REPOSITORY_ROOT / "tests" / "fixtures" / "windows-batch" / "bin"
+        marker = batch_root / "injected.txt"
+        if marker.exists():
+            marker.unlink()
+        original_path = os.environ.get("PATH", "")
+        os.environ["PATH"] = f"{batch_bin}{os.pathsep}{original_path}"
+        try:
+            with self.assertRaises(SafetyError):
+                run_bounded_command(
+                    ["npm", "test", "&", "echo", "INJECTED>injected.txt"],
+                    policy=PathPolicy(batch_root),
+                    timeout_seconds=20,
+                    max_output_bytes=4096,
+                )
+        finally:
+            os.environ["PATH"] = original_path
+        self.assertFalse(marker.exists())
 
     def test_blocks_repository_shadowed_interpreter(self) -> None:
         with tempfile.TemporaryDirectory(dir=REPOSITORY_ROOT) as temporary:
